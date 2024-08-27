@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
-import { fileURLToPath } from 'url';
+
 import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import incomeRoutes from './routes/incomeRoutes.js';
@@ -13,10 +13,9 @@ import generateCookie from './utils/generateCookie.js'; // Vous importez generat
 
 // Configuration des variables d'environnement
 dotenv.config();
+const __dirname = path.resolve();
 
-// Détermine le répertoire du fichier en cours
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -55,13 +54,13 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/incomes', authenticateUser, incomeRoutes);
 app.use('/api/v1/expenses', authenticateUser, expenseRoutes);
 
-// Serve les fichiers statiques du frontend
-app.use(express.static(path.join(__dirname, 'expense-track', 'dist')));
 
-// Route pour l'application frontend
+app.use(express.static(path.join(__dirname, '/expense-track/dist')));
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'expense-track', 'dist', 'index.html'));
 });
+
 
 // Démarrer le serveur
 const startServer = async () => {
